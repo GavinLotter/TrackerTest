@@ -1,6 +1,9 @@
 # Take Home Assignment: Telematics Ingestion and Reporting (C++/SQL, Cross Platform)
 This is a solution to the technical vetting assignment given to me by Shanique Jooste at OfferZen on behalf of Tracker.
 
+*I have no experience with Azure, so rather than attempting to fake understanding with a flawed azure pipeline, I have omitted the
+3rd task.*
+
 ## Implementation and Tooling Decisions
 Although there are alternatives, I chose to use GCC and CMake as the build system for the project.  Intended to be cross-platform,
 to work on Windows and Linux, using freely available, open-source software was obvious.  I also chose to use C++20 to gain access
@@ -56,6 +59,8 @@ The requirements document suggests a very low ingestion rate, a burst of ~100 ev
 me disinclined to use multi-threading.  A single thread is more than capable of maintaining throughput, even with the database IO.
 Indeed, performance is not limited by processing, but by file and database IO.  Separating these would be an easy way to enhance
 performance.  Moreover, the events are already batched inside a file, so there is no requirement to handle any hardware events.
+Local tests have shown an ingestion rate of around 120 events per second.  This is significantly slower than I anticipated, yet
+within margins.
 
 If a daily ingestion of 20,000 events is expected, then the ```events``` table is going to fill quite quickly, 1,000,000 records
 expected over 50 days.  This will require long-term database maintenance which is beyond the scope of this solution.  It also
@@ -85,7 +90,8 @@ SELECT device_id, ts_ms, lat, lon
  WHERE ts_ms >= <start timestamp> AND ts_ms < <end timestamp>
  ORDER BY device_id, ts_ms
 ```
-The timestamp parameters bound the date of interest.
+The timestamp parameters bound the date of interest, the single events before and after the date are ignored, even if they may
+be considered as part of the same 'trip'.
 
 ### Top 5 highest average speeds over the last 24 hours
 The average speed of all devices is calculated over the 24-hour period ending at report run time.  Processing is very similar to
@@ -105,7 +111,7 @@ in the time spent - time is ignored when the device is standing still.
 ## Notes on C++ styling
 It should be noticed that I use C-style casts, instead of the modern C++ template-styled casts.  My reasoning is simply that I
 consider the modern casts to be unwieldy and harder to read, with scant benefit.  The only cast that I recognise the benefit in is
-```dynamic_cast<>```, and ```duration_cast<>``` is required by std::chrono functions.
+```dynamic_cast<>```, while ```duration_cast<>``` is required by std::chrono functions.
 
 I've used ```printf()``` and ```puts()``` instead of the C++ console IO streams.  My reasoning is that formatting is much easier
 with the old C functions than the verbose and unwieldy console stream.  Unfortunately, the even-more-modern std::print methods
@@ -114,5 +120,5 @@ are only available with C++23.
 ## AI Declaration
 The suggested 4-hour completion time for this solution strongly suggests that use of AI tools is expected.  While I did use AI to
 field specific questions about specific tools, I did not use any AI in the creation of any of the code or documentation in this
-assignment.  However, as I have no experience with Azure, I used Gemini to make a template for ```azure-pipelines.yml```.
+assignment.
 - Gavin Lotter 2026-10-06

@@ -154,7 +154,7 @@ void Report_Top5AvgSpeed(SQLite::Database& db, __attribute__((unused)) const std
 
 void Report_DumpAll(SQLite::Database& db, __attribute__((unused)) const std::string& parameters)
 {
-    SQLite::Statement query(db, "SELECT * from events");
+    SQLite::Statement query(db, "SELECT * FROM events ORDER BY device_id, event_id");
     while (query.executeStep())
     {
         printf("%s,%s,%lld,%.6f,%.6f,%.1f,%.1f\n",
