@@ -51,15 +51,4 @@ public:
         query.exec();
 
     }
-
-    static void Load(SQLite::Statement &query, EventRecord &record)
-    {
-        record.device_id = (const char*)query.getColumn(0);
-        record.event_id = (const char*)query.getColumn(1);
-        record.ts_ms = query.getColumn(2);
-        record.lat = query.getColumn(3);
-        record.lon = query.getColumn(4);
-        record.speed_kph = query.getColumn(5);
-        record.heading_deg = query.getColumn(6);
-    }
 };

@@ -12,7 +12,7 @@ const unsigned long EarthRadius = 6371000;              // Equatorial radius.  P
 const unsigned int MillisecondsPerDay = 86400000;
 
 // Return the normalised distance between two points on a sphere
-double SphericalDistance(double lat1, double lon1, double lat2, double lon2)
+double SphericalAngle(double lat1, double lon1, double lat2, double lon2)
 {
     double t = cos(lat1) * cos(lon1) * cos(lat2) * cos(lon2) +
                cos(lat1) * sin(lon1) * cos(lat2) * sin(lon2) +
@@ -76,7 +76,7 @@ void AccumulateSpeed(SQLite::Statement& query, std::vector<AvgSpeed>& speedList)
             const int64_t curTime = (int64_t)query.getColumn("ts_ms");
             const double curLat = (double)query.getColumn("lat");
             const double curLon = (double)query.getColumn("lon");
-            accDistance += SphericalDistance(prevLat, prevLon, curLat, curLon) * EarthRadius;
+            accDistance += SphericalAngle(prevLat, prevLon, curLat, curLon) * EarthRadius;
             if (accDistance > 0) accDuration += curTime - prevTime; // Don't accumulate the time if there's been no movement
 
             prevTime = curTime;

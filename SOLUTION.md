@@ -26,8 +26,8 @@ These are the assumptions I have made:
 - device_id is globally unique
 - event_id is not globally unique, but is unique inside device_id
 - event_id increases within device_id and can be used to order events
-- the device_id data suggest a limit of 1,000 items per device type, and are not representative patterns for all device_ids
-- the event_id data suggest a limit of 10,000 events per device, and are not representative patterns for all event_ids
+- the device_id format suggests a limit of 1,000 items per device type, and is not a representative pattern for all device_ids
+- the event_id format suggests a limit of 10,000 events per device, and is not a representative pattern for all event_ids
 
 The sole table used in this solution is built using this SQL:
 ```SQL
